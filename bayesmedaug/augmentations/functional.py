@@ -29,6 +29,12 @@ def to_tuple(param, low=None, bias=None):
     return tuple(param)
 
 class Gamma():
+    """
+    Gamma:
+      - Applies gamma correction to image.
+      - hyperparameters:
+        * gamma: float
+    """
     def __init__(self, gamma):
         self.gamma = gamma
         self.to_mask = False
@@ -49,6 +55,12 @@ class Gamma():
         return img, mask
 
 class GaussianBlur():
+    """
+    GaussianBlur:
+      - Applies gaussian blurring to image.
+      - hyperparameters:
+        * sigma_min: float, sigma_max: float, kernel_size: int
+    """
     def __init__(self, kernel_size, sigma_min=0.1, sigma_max=2.0):
         self.sigma_min = sigma_min
         self.sigma_max = sigma_max
@@ -69,6 +81,12 @@ class GaussianBlur():
 
 
 class OpticalDistortion():
+    """
+    OpticalDistortion:
+      - Applies optical distortion to image.
+      - hyperparameters:
+        * k: int, dx: int, dy: int
+    """
     def __init__(self, k=0, dx=0, dy=0, interpolation=cv2.INTER_LINEAR, border_mode=cv2.BORDER_REFLECT_101, value=None):
         self.k = k
         self.dx = dx
@@ -116,6 +134,13 @@ class OpticalDistortion():
 
 
 class GaussianNoise():
+    """
+    GaussianNoise:
+      - Elementwise addition with 2D gaussian noise to image.
+      - Chooses random variance from var_limit range.
+      - hyperparameters:
+        * mu: float, var_limit: tuple
+    """
     def __init__(self, mu = 0, var_limit=(10.0, 50.0)):
         self.mu = mu
         self.var_limit = var_limit
@@ -140,6 +165,12 @@ class GaussianNoise():
 
 
 class GaussianNoiseDeterministic():
+    """
+    GaussianNoiseDeterministic:
+      - Mean zero 2D gaussian noise.
+      - hyperparameters:
+        * var: float
+    """
     def __init__(self, var = 1):
         self.mu = 0
         self.var = var
@@ -163,6 +194,14 @@ class GaussianNoiseDeterministic():
 
 
 class BrightnessContrast():
+    """
+    BrightnessContrast:
+      - Change brightness and contrast of the input image.
+      - hyperparameters:
+        * brightness_limit (float): factor range for changing brightness.
+        * contrast_limit (float): factor range for changing contrast.
+        * p (float): probability of applying the transform.
+    """
     def __init__(self, brightness_limit=0.2, contrast_limit=0.2, brightness_by_max=True, always_apply=False, p=0.5):
         self.brightness_limit = to_tuple(brightness_limit)
         self.contrast_limit = to_tuple(contrast_limit)
@@ -216,6 +255,12 @@ class BrightnessContrast():
 
 
 class Rotate():
+    """
+    Rotate:
+      - Rotates the image.
+      - hyperparameters:
+        * angle: int
+    """
     def __init__(self, angle):
         self.angle = angle
         self.to_mask = True
@@ -233,6 +278,12 @@ class Rotate():
         return img, mask
 
 class ShearY():
+    """
+    ShearY:
+      - Moves one side of the image along the Y axis.
+      - hyperparameters:
+        * shear_amount: int
+    """
     def __init__(self, shear_amount):
         self.shear_amount = shear_amount
         self.to_mask = True
@@ -258,6 +309,12 @@ class ShearY():
 
 
 class ShearX():
+    """
+    ShearX:
+      - Moves one side of the image along the X axis.
+      - hyperparameters:
+        * shear_amount: int
+    """
     def __init__(self, shear_amount):
         self.shear_amount = shear_amount
         self.to_mask = True
@@ -282,6 +339,12 @@ class ShearX():
         return img, mask
 
 class ShiftY():
+    """
+    ShiftY:
+      - Shifts the image along the Y axis.
+      - hyperparameters:
+        * shift_amount: int
+    """
     def __init__(self, shift_amount):
         self.shift_amount = shift_amount
         self.to_mask = True
@@ -306,6 +369,12 @@ class ShiftY():
         return img, mask
 
 class ShiftX():
+    """
+    ShiftX:
+      - Shifts the image along the X axis.
+      - hyperparameters:
+        * shift_amount: int
+    """
     def __init__(self, shift_amount):
         self.shift_amount = shift_amount
         self.to_mask = True
@@ -331,6 +400,12 @@ class ShiftX():
     
     
 class ZoomOut():
+    """
+    ZoomOut:
+      - (non)zooms the image.
+      - hyperparameters:
+        * zoom_amount: float
+    """
     def __init__(self, zoom_amount):
         self.zoom_amount = zoom_amount
         self.to_mask = True
@@ -354,6 +429,12 @@ class ZoomOut():
         return img, mask
 
 class RandomCrop():
+    """
+    RandomCrop:
+      - Crops random area of the image
+      - hyperparameters:
+        * crop_height: int, crop_width: int
+    """
     def __init__(self, crop_height, crop_width):
         self.crop_height = crop_height
         self.crop_width = crop_width
