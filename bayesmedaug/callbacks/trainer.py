@@ -9,6 +9,13 @@ from bayesmedaug.utils.model_utils import (
     multiclass_dice_coeff
 )
 
+from bayesmedaug.utils.discretize import(
+    roundup,
+    discrete_angle,
+    discrete_angle_normalized,
+    discrete_shift
+)
+
 class Trainer():
     def __init__(
             self,
