@@ -1,4 +1,5 @@
 import cv2
+import imgaug as ia
 import imgaug.augmenters as iaa
 import numpy as np
 
@@ -54,6 +55,10 @@ class Gamma():
 
         return img, mask
 
+    @staticmethod
+    def hyperparameters():
+        return ["gamma"]
+
 class GaussianBlur():
     """
     GaussianBlur:
@@ -78,6 +83,10 @@ class GaussianBlur():
         if self.to_mask:
             raise NotImplementedError()
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["kernel_size", "sigma_min", "sigma_max"]
 
 
 class OpticalDistortion():
@@ -132,6 +141,10 @@ class OpticalDistortion():
         
         return img, mask
 
+    @staticmethod
+    def hyperparameters():
+        return ["k", "dx", "dy"]
+
 
 class GaussianNoise():
     """
@@ -163,6 +176,10 @@ class GaussianNoise():
         
         return img, mask
 
+    @staticmethod
+    def hyperparameters():
+        return ["mu", "var_limit"]
+
 
 class GaussianNoiseDeterministic():
     """
@@ -191,6 +208,10 @@ class GaussianNoiseDeterministic():
             raise NotImplementedError()
         
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["var"]
 
 
 class BrightnessContrast():
@@ -253,6 +274,10 @@ class BrightnessContrast():
 
         return img, mask
 
+    @staticmethod
+    def hyperparameters():
+        return ["brightness_limit", "contrast_limit"]
+
 
 class Rotate():
     """
@@ -276,6 +301,10 @@ class Rotate():
             seq = iaa.Sequential([iaa.Rotate((self.angle))])
             mask = seq(images=mask)
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["angle"]
 
 class ShearY():
     """
@@ -306,6 +335,10 @@ class ShearY():
         
             mask = seq(images=mask)
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["shear_amount"]
 
 
 class ShearX():
@@ -338,6 +371,10 @@ class ShearX():
             mask = seq(images=mask)
         return img, mask
 
+    @staticmethod
+    def hyperparameters():
+        return ["shear_amount"]
+
 class ShiftY():
     """
     ShiftY:
@@ -368,6 +405,10 @@ class ShiftY():
             mask = seq(images=mask)
         return img, mask
 
+    @staticmethod
+    def hyperparameters():
+        return ["shift_amount"]
+
 class ShiftX():
     """
     ShiftX:
@@ -397,6 +438,10 @@ class ShiftX():
         
             mask = seq(images=mask)
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["shift_amount"]
     
     
 class ZoomOut():
@@ -427,6 +472,10 @@ class ZoomOut():
             ])
             mask = seq(images=mask)
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["zoom_amount"]
 
 class RandomCrop():
     """
@@ -484,3 +533,7 @@ class RandomCrop():
             mask = mask[None, :, :]
             
         return img, mask
+
+    @staticmethod
+    def hyperparameters():
+        return ["crop_height", "crop_width"]

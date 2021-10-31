@@ -1,8 +1,12 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import os
 from typing import Optional
+from tqdm.auto import tqdm
 
+from bayesmedaug.augmentations.alist import Listed
+from bayesmedaug.utils.loaders import get_dataloaders
 from bayesmedaug.utils.model_utils import (
     dice_coeff,
     dice_loss,
@@ -27,6 +31,7 @@ class Trainer():
             epochs: int,
             train_dir: str,
             eval_dir: str,
+            augmentations: Listed,
             scheduler: Optional = None,
             scheduler_args: Optional[dict]  = None,
             batch_size: int = 5,
@@ -44,11 +49,14 @@ class Trainer():
         self.train_dir = train_dir
         self.eval_dir = eval_dir
         self.dice_loss = dice_loss
+        self.augmentations = augmentations
+        self.batch_size = batch_size
+        self.epochs = epochs
 
     def train(self, **params):
-        model = self.model(self.model_args)
+        model = self.model(**self.model_args).to(self.device)
         criterion = nn.CrossEntropyLoss()
-        optimizer = self.optimizer(model.parameters(), self.optimizer_args)
+        optimizer = self.optimizer(model.parameters(), **self.optimizer_args)
         if self.scheduler != None:
             scheduler = self.scheduler(self.scheduler_args)
         
@@ -59,7 +67,7 @@ class Trainer():
         if "shift_y" in params.keys():
             params["shift_y"] = discrete_shift(params["shift_y"])
 
-        transform = get_augmentations(**params)
+        transform = self.augmentations(**params)
 
         paths_ = []
         paths_.append(os.path.join(self.train_dir, "images"))
@@ -84,7 +92,7 @@ class Trainer():
                         loss = criterion(out, batch["mask"].long().to(self.device)) \
                             + dice_loss(
                                 F.softmax(out, dim=1).float(),
-                                F.one_hot(batch["mask"].to(device), model.n_classes).permute(0, 3, 1, 2).float(),
+                                F.one_hot(batch["mask"].to(self.device), model.n_classes).permute(0, 3, 1, 2).float(),
                                 multiclass=True
                             )
                     else:
@@ -94,7 +102,7 @@ class Trainer():
                     train_loss += loss.item()
                     tt.update()
 
-                val_score = evaluate(model, test_dataloader, device, True)
+                val_score = self.evaluate(model, test_dataloader, self.device, True)
                 if self.return_best:
                     if val_score.item() > best_dice:
                         best_dice = val_score.item()
