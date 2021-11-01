@@ -2,6 +2,7 @@ import cv2
 import imgaug as ia
 import imgaug.augmenters as iaa
 import numpy as np
+import random
 
 MAX_VALUES_BY_DTYPE = {
     np.dtype("uint8"): 255,
