@@ -1,4 +1,9 @@
-from bayesmedaug.models.layers import *
+from bayesmedaug.models.layers import (
+    DoubleConv,
+    Down,
+    Up,
+    OutConv
+)
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
