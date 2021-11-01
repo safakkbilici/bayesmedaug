@@ -2,7 +2,7 @@
 
 bayesmed optimizes your data augmentation hyperparameters for medical image segmentation tasks by using [Bayesian Optimization](https://github.com/fmfn/BayesianOptimization).
 
-bayesmed is in currently in beta release and still in development.
+bayesmed is currently in beta release and still in development.
 
 ## Authors
 - M. Şafak Bilici
