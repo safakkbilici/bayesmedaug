@@ -4,8 +4,6 @@ from bayesmedaug.augmentations.alist import Listed
 from bayesmedaug.callbacks.bo import BOMed
 from bayesmedaug.augmentations.functional import *
 
-
-
 CURRENT_AUGMENTATIONS = [
     Gamma,
     GaussianBlur,
