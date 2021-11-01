@@ -10,7 +10,6 @@ from os import listdir
 from os.path import splitext
 from pathlib import Path
 
-
 class SegmentationDataset(Dataset):
     def __init__(self, images_dir: str, masks_dir: str, scale: float = 1.0, mask_suffix: str = '', transform = None):
         self.images_dir = Path(images_dir)
