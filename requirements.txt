@@ -1,0 +1,6 @@
+bayesian-optimization
+torch
+torchvision
+tqdm
+imgaug
+opencv-python
