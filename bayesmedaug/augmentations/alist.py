@@ -2,6 +2,7 @@ from typing import Optional
 import bayesmedaug
 from torchvision import transforms
 import random
+import warnings
 
 class Listed():
     def __init__(
@@ -42,5 +43,5 @@ class Listed():
 
         composed = f_(a_)
         if set(used) != set(list(params.keys())):
-            print("WARNING: Listed data augmentations and hyperparameters are not matching.")
+            warnings.warn("WARNING: Listed data augmentations and hyperparameters are not matching.")
         return composed
