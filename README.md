@@ -1,8 +1,8 @@
 # bayesmedaug: Bayesian Optimization Library for Medical Image Segmentation.
 
-bayesmed optimizes your data augmentation hyperparameters for medical image segmentation tasks by using [Bayesian Optimization](https://github.com/fmfn/BayesianOptimization).
+bayesmedaug optimizes your data augmentation hyperparameters for medical image segmentation tasks by using [Bayesian Optimization](https://github.com/fmfn/BayesianOptimization).
 
-bayesmed is currently in beta release and still in development.
+bayesmedaug is currently in beta release and still in development.
 
 ## Authors
 - M. Şafak Bilici
