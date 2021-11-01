@@ -11,6 +11,14 @@ class Listed():
             randomized: bool = True,
             prob_list: Optional[list] = None
     ):
+        r"""
+        Args:
+            augmentations: the list of implemented augmentations that to be used.
+            
+            randomized: random applying probability for each augmentation.
+
+            prob_list: the list of the probabilities if randomized is ``False``.
+        """
         for a in augmentations:
             if a not in bayesmedaug.CURRENT_AUGMENTATIONS:
                 raise NotImplementedError("No current implementation of this augmentation")
