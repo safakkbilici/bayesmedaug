@@ -20,14 +20,10 @@ class Listed():
 
 
     def __call__(self, **params):
-        
         r_ = transforms.RandomApply
         f_ = transforms.Compose
         a_ = []
-
         used = []
-
-
         if self.randomized:
             for a in self.augmentations:
                 p = random.uniform(0.0001, 0.9999)
