@@ -38,6 +38,36 @@ class Trainer():
             return_best: bool = True,
             dice_loss: bool = True
     ):
+        r"""
+        Args:
+            model: implemented unet models that to bo used, i.e., bayesmedaug.VanillaUNet
+         
+            model_args: the dictionary for model's attributes.
+
+            optimizer: pytorch optimizer, i.e., torch.optim.Adam
+
+            optimizer_args: the dictionary for optimizer's attributes.
+
+            device: hardware device.
+
+            epochs: number of epochs for each iteration of bayesian optimization.
+
+            train_dir: train image path, i.e., ``Desktop/drive/train/``
+
+            eval_dir: eval image path, i.e., ``Desktop/drive/test/``
+
+            augmentations: the object of the Listed class.
+
+            scheduler: learning rate scheduler if desired, i.e., torch.optim.lr_Scheduler.StepLR
+
+            scheduler_args: the dictionary for scheduler's attributes.
+
+            batch_size: batch size for both training and evaluating.
+
+            return_best: bayesian optimization selects best mean dice score over all epoch results.
+
+            dice_loss: if True, then the loss function becomes crossentropy + dice, else crossentropy
+        """
         self.model = model
         self.model_args = model_args
         self.optimizer = optimizer
