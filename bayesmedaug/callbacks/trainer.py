@@ -88,7 +88,7 @@ class Trainer():
         criterion = nn.CrossEntropyLoss()
         optimizer = self.optimizer(model.parameters(), **self.optimizer_args)
         if self.scheduler != None:
-            scheduler = self.scheduler(self.scheduler_args)
+            scheduler = self.scheduler(optimizer, **self.scheduler_args)
         
         if "angle" in params.keys():
             params["angle"] = discrete_angle_normalized(params["angle"])
