@@ -9,7 +9,7 @@ class Listed():
             self,
             augmentations,
             randomized: bool = True,
-            randomized_bounds = (0,0001, 0.9999)
+            randomized_bounds: tuple = (0.0001, 0.9999),
             prob_list: Optional[list] = None
     ):
         r"""
