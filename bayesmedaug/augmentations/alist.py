@@ -9,6 +9,7 @@ class Listed():
             self,
             augmentations,
             randomized: bool = True,
+            randomized_bounds = (0,0001, 0.9999)
             prob_list: Optional[list] = None
     ):
         r"""
@@ -25,6 +26,7 @@ class Listed():
             
         self.augmentations = augmentations
         self.randomized = randomized
+        self.randomized_bounds = randomized_bounds
         self.prob_list = prob_list
 
 
@@ -35,7 +37,7 @@ class Listed():
         used = []
         if self.randomized:
             for a in self.augmentations:
-                p = random.uniform(0.0001, 0.9999)
+                p = random.uniform(self.randomized_bounds[0], self.randomized_bounds[1])
                 hyperparams = a.hyperparameters()
                 selected_hyperparams = {i: params[i] for i in hyperparams if i in params.keys()}
                 used.extend(list(selected_hyperparams.keys()))
