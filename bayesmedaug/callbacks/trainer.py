@@ -40,7 +40,7 @@ class Trainer():
     ):
         r"""
         Args:
-            model: implemented unet models that to bo used, i.e., bayesmedaug.VanillaUNet
+            model: implemented unet models that to be used, i.e., bayesmedaug.VanillaUNet
          
             model_args: the dictionary for model's attributes.
 
