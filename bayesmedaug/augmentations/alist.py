@@ -4,6 +4,10 @@ from torchvision import transforms
 import random
 import warnings
 
+#TODO:
+# - optimize selection probability of each augmentation method
+#   then match hyperparameters and methods automatically
+
 class Listed():
     def __init__(
             self,
