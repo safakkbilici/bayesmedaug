@@ -4,6 +4,10 @@ import imgaug.augmenters as iaa
 import numpy as np
 import random
 
+#TODO:
+# - re-implement gaussian noise augmentation
+# - implement more diverse augmentations
+
 MAX_VALUES_BY_DTYPE = {
     np.dtype("uint8"): 255,
     np.dtype("uint16"): 65535,
