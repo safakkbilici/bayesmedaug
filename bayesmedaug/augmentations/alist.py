@@ -62,6 +62,7 @@ class Listed():
                 selected_hyperparams = {i: params[i] for i in hyperparams if i in params.keys()}
                 used.extend(list(selected_hyperparams.keys()))
                 a_.append(r_([a(**selected_hyperparams)], p = params["p_" + a.__name__]))
+                used.append("p_" + a.__name__)
 
         composed = f_(a_)
         if set(used) != set(list(params.keys())):
