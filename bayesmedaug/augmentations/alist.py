@@ -33,6 +33,7 @@ class Listed():
         self.randomized = randomized
         self.randomized_bounds = randomized_bounds
         self.prob_list = prob_list
+        self.optimize_p = optimize_p
 
 
     def __call__(self, **params):
