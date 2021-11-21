@@ -12,6 +12,7 @@ class Listed():
     def __init__(
             self,
             augmentations,
+            optimize_p: bool = False
             randomized: bool = True,
             randomized_bounds: tuple = (0.0001, 0.9999),
             prob_list: Optional[list] = None
@@ -47,13 +48,19 @@ class Listed():
                 used.extend(list(selected_hyperparams.keys()))
                 a_.append(r_([a(**selected_hyperparams)], p = p))
 
-        else:
+        elif self.prob_list != None:
             for p, a in zip(self.prob_list, self.augmentations):
                 hyperparams = a.hyperparameters()
                 selected_hyperparams = {i: params[i] for i in hyperparams if i in params.keys()}
                 used.extend(list(selected_hyperparams.keys()))
                 a_append(r_([a(**selected_hyperparams)], p = p))
 
+        elif self.optimize_p:
+            for a in self.augmentations:
+                hyperparams = a.hyperparameters()
+                selected_hyperparams = {i: params[i] for i in hyperparams if i in params.keys()}
+                used.extend(list(selected_hyperparams.keys()))
+                a_.append(r_([a(**selected_hyperparams)], p = params[p + "_" + a.__name__]))
 
         composed = f_(a_)
         if set(used) != set(list(params.keys())):
