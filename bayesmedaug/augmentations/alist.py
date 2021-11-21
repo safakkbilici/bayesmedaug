@@ -12,7 +12,7 @@ class Listed():
     def __init__(
             self,
             augmentations,
-            optimize_p: bool = False
+            optimize_p: bool = False,
             randomized: bool = True,
             randomized_bounds: tuple = (0.0001, 0.9999),
             prob_list: Optional[list] = None
