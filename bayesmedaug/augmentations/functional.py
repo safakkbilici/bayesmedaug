@@ -542,3 +542,72 @@ class RandomCrop():
     @staticmethod
     def hyperparameters():
         return ["crop_height", "crop_width"]
+    
+class Emboss():
+    """
+    Emboss:
+    - Embosses the input image and overlays with the input image.
+    - hyperparameters:
+        * alpha (float): range to choose the visibility of the embossed image.
+        * strength (float): strength range of the embossing.
+    """
+    def __init__(self, alpha=(0.2, 1.0), strength=(0.25, 1.0)):
+        self.alpha = alpha
+        self.strength = strength
+        self.to_img = True
+        self.to_mask = False
+    
+    def __call__(self, pairs):
+        img = pairs[0]
+        mask = pairs[1]
+        
+        if self.to_img:
+            seq = iaa.Sequential([
+                iaa.convolutional.Emboss(self.alpha, self.strength)
+                ])
+        
+            img = seq(images=img)
+
+        if self.to_mask:
+           raise NotImplementedError()
+        
+        return img, mask
+    
+    @staticmethod
+    def hyperparameters():
+        return ["alpha", "strength"]
+    
+   
+class Sharpen():
+    """
+    Sharpen:
+    - Sharpen the input image and overlays the result with the original image.
+    - hyperparameters:
+        * alpha (float): range to choose the visibility of the embossed image.
+        * lightness (float): range to choose the lightness of the sharpened image.
+    """
+    def __init__(self, alpha=(0.2, 0.5), lightness=(0.5, 1.0)):
+        self.alpha = alpha
+        self.lightness = lightness
+        self.to_img = True
+        self.to_mask = False
+    
+    def __call__(self, pairs):
+        img = pairs[0]
+        mask = pairs[1]
+        
+        if self.to_img:
+            seq = iaa.Sequential([
+                iaa.convolutional.Sharpen(self.alpha, self.lightness)
+                ])
+        
+            img = seq(images=img)
+
+        if self.to_mask:
+           raise NotImplementedError()
+        
+        return img, mask
+    
+    @staticmethod
+    def hyperparameters():
+        return ["alpha", "lightness"]
