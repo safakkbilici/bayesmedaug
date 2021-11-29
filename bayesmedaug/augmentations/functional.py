@@ -551,7 +551,7 @@ class Emboss():
         * alpha (float): range to choose the visibility of the embossed image.
         * strength (float): strength range of the embossing.
     """
-    def __init__(self, alpha=(0.2, 1.0), strength=(0.25, 1.0)):
+    def __init__(self, alpha=0.2, strength=1.0):
         self.alpha = alpha
         self.strength = strength
         self.to_img = True
@@ -586,7 +586,7 @@ class Sharpen():
         * alpha (float): range to choose the visibility of the embossed image.
         * lightness (float): range to choose the lightness of the sharpened image.
     """
-    def __init__(self, alpha=(0.2, 0.5), lightness=(0.5, 1.0)):
+    def __init__(self, alpha=0.2, lightness=1.0):
         self.alpha = alpha
         self.lightness = lightness
         self.to_img = True
