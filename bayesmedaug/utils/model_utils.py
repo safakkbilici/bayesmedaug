@@ -33,3 +33,15 @@ def multiclass_dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: boo
         dice += dice_coeff(input[:, channel, ...], target[:, channel, ...], reduce_batch_first, epsilon)
 
     return dice / input.shape[1]
+
+def IoU(input: Tensor, target: Tensor):
+
+  assert input.size() == target.size()
+  
+  y_true_f = torch.flatten(target)
+  y_pred_f = torch.flatten(input)
+
+  intersection = torch.sum (y_true_f * y_pred_f)
+  
+  union = torch.sum (y_true_f + y_pred_f - y_true_f * y_pred_f)
+  return intersection/union
