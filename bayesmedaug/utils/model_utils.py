@@ -1,5 +1,6 @@
 import torch
 from torch import Tensor
+from sklearn import metrics
 
 
 def dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: bool = False, epsilon=1e-6):
@@ -46,7 +47,6 @@ def IoU(input: Tensor, target: Tensor):
   union = torch.sum (y_true_f + y_pred_f - y_true_f * y_pred_f)
   return intersection/union
 
-from sklearn import metrics
 
 def AUC(input: Tensor, target: Tensor):
 
