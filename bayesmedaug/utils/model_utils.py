@@ -4,6 +4,12 @@ from sklearn import metrics
 
 
 def dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: bool = False, epsilon=1e-6):
+    ### Calculates and returns the dice coefficient.
+    #### Input Parameters ####
+    #.....input -> TBA
+    #.....target -> TBA
+    #.....reduce_batch_first -> TBA
+    #.....epsilon -> TBA
     assert input.size() == target.size()
     if input.dim() == 2 and reduce_batch_first:
         raise ValueError(f'Dice: asked to reduce batch but got tensor without batch dimension (shape {input.shape})')
@@ -23,6 +29,11 @@ def dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: bool = False, 
 
 
 def dice_loss(input: Tensor, target: Tensor, multiclass: bool = False):
+    # Calculates the dice loss.
+    #### Input Parameters ####
+    #.....input -> TBA
+    #.....target -> TBA
+    #.....multiclass -> TBA
     assert input.size() == target.size()
     fn = multiclass_dice_coeff if multiclass else dice_coeff
     return 1 - fn(input, target, reduce_batch_first=True)
@@ -36,6 +47,10 @@ def multiclass_dice_coeff(input: Tensor, target: Tensor, reduce_batch_first: boo
     return dice / input.shape[1]
 
 def IoU(input: Tensor, target: Tensor):
+  # Calculates the intersection over union value.
+  #### Input Parameters ####
+  #.....input -> TBA
+  #.....target -> TBA
 
   assert input.size() == target.size()
   
@@ -49,6 +64,10 @@ def IoU(input: Tensor, target: Tensor):
 
 
 def AUC(input: Tensor, target: Tensor):
+  # Calculates the area under the curve value.
+  #### Input Parameters ####
+  #.....input -> TBA
+  #.....target -> TBA
 
   assert input.size() == target.size()
   
