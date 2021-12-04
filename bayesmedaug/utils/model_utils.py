@@ -45,3 +45,20 @@ def IoU(input: Tensor, target: Tensor):
   
   union = torch.sum (y_true_f + y_pred_f - y_true_f * y_pred_f)
   return intersection/union
+
+from sklearn import metrics
+
+def AUC(input: Tensor, target: Tensor):
+
+  assert input.size() == target.size()
+  
+  y_true_f = torch.flatten(target)
+  y_pred_f = torch.flatten(input)
+
+  y_true_f = Tensor.cpu(y_true_f)
+  y_pred_f = Tensor.cpu(y_pred_f)
+
+  fpr, tpr, thresholds = metrics.roc_curve(y_true_f, y_pred_f)
+  auc_score = metrics.auc(fpr, tpr)
+
+  return auc_score

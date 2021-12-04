@@ -11,7 +11,8 @@ from bayesmedaug.utils.model_utils import (
     dice_coeff,
     dice_loss,
     multiclass_dice_coeff,
-    IoU
+    IoU,
+    AUC
 )
 
 from bayesmedaug.utils.discretize import(
@@ -70,7 +71,7 @@ class Trainer():
 
             dice_loss: if True, then the loss function becomes crossentropy + dice, else crossentropy
 
-            return_metric: Bayesian Optimization optimizes with given metric. Default is 'dice', can also be 'iou'.
+            return_metric: Bayesian Optimization optimizes with given metric. Default is 'dice', can also be 'iou' or 'auc'.
         """
         self.model = model
         self.model_args = model_args
@@ -94,7 +95,7 @@ class Trainer():
         optimizer = self.optimizer(model.parameters(), **self.optimizer_args)
         if self.scheduler != None:
             scheduler = self.scheduler(optimizer, **self.scheduler_args)
-                
+        
         if "angle" in params.keys():
             params["angle"] = discrete_angle_normalized(params["angle"])
         if "shift_x" in params.keys():
@@ -113,8 +114,7 @@ class Trainer():
         train_dataloader, test_dataloader = get_dataloaders(transform, paths_, self.batch_size)
         total = len(train_dataloader) * self.epochs
         
-        best_dice = 0
-        best_iou = 0
+        best_metric = 0
 
         with tqdm(total=total, desc="Training Round", leave=False, position=0) as tt:
             for epoch in range(self.epochs):
@@ -142,21 +142,21 @@ class Trainer():
                 val_score = self.evaluate(model, test_dataloader, self.device, True)
 
                 if self.return_best:
-                    if val_score.item() > best_dice:
+                    if val_score.item() > best_metric:
                         try:
-                          best_dice = val_score.item()
+                          best_metric = val_score.item()
                         except:
-                          best_dice = float(val_score)
+                          best_metric = float(val_score)
                 else:
                     try:
-                      best_dice = val_score.item()
+                      best_metric = val_score.item()
                     except:
-                      best_dice = float(val_score)
+                      best_metric = float(val_score)
                 
                 if self.scheduler != None:
                     scheduler.step()
 
-        return best_dice
+        return best_metric
         
     @torch.no_grad()
     def evaluate(self, net, dataloader, device, disable=True):
@@ -177,11 +177,15 @@ class Trainer():
                     eval_score += dice_coeff(mask_pred, mask_true, reduce_batch_first=False)
                 elif self.return_metric == 'iou':
                     eval_score += IoU(mask_pred, mask_true)
+                elif self.return_metric == 'auc':
+                    eval_score += AUC(mask_pred, mask_true)
             else:
                 mask_pred = F.one_hot(mask_pred.argmax(dim=1), net.n_classes).permute(0, 3, 1, 2).float()
                 if self.return_metric == 'dice':
                     eval_score += multiclass_dice_coeff(mask_pred[:, 1:, ...], mask_true[:, 1:, ...], reduce_batch_first=False)
                 elif self.return_metric == 'iou':
                     eval_score += IoU(mask_pred, mask_true)
+                elif self.return_metric == 'auc':
+                    eval_score += AUC(mask_pred, mask_true)
                 
         return eval_score / num_val_batches
