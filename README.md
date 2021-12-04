@@ -42,7 +42,7 @@ trainer = Trainer(
     device = device,
     epochs = 1,
     train_dir = "~/Desktop/drive/train/",
-    eval_dir = ~/Desktop/drive/test/",
+    eval_dir = "~/Desktop/drive/test/",
     augmentations = auglist,
     batch_size = 1
 )
