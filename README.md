@@ -41,8 +41,8 @@ trainer = Trainer(
     optimizer_args = {"lr": 0.0005},
     device = device,
     epochs = 1,
-    train_dir = "/home/safak/Desktop/drive/train/",
-    eval_dir = "/home/safak/Desktop/drive/test/",
+    train_dir = "~/Desktop/drive/train/",
+    eval_dir = ~/Desktop/drive/test/",
     augmentations = auglist,
     batch_size = 1
 )
