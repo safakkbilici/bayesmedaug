@@ -17,7 +17,9 @@ CURRENT_AUGMENTATIONS = [
     ShiftX,
     ShiftY,
     ZoomOut,
-    RandomCrop
+    RandomCrop,
+    Emboss,
+    Sharpen
 ]
 
 
@@ -25,3 +27,10 @@ CURRENT_AUGMENTATIONS = [
 def list_augmentations():
     for aug in CURRENT_AUGMENTATIONS:
         print(aug.__doc__)
+
+
+def explain(obj_class):
+    try:
+        print(obj_class.__doc__)
+    except:
+        print("")
