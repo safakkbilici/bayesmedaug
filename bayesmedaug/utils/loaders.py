@@ -67,26 +67,44 @@ class SegmentationDataset(Dataset):
         assert len(img_file) == 1, f'Either no image or multiple images found for the ID {name}: {img_file}'
         mask = self.load(mask_file[0])
         img = self.load(img_file[0])
-        
+
 
         assert img.size == mask.size, \
             'Image and mask {name} should be the same size, but are {img.size} and {mask.size}'
 
         img = self.preprocess(img, self.scale, is_mask=False)
         mask = self.preprocess(mask, self.scale, is_mask=True)
-        
-        img = np.pad(img, ((0,0),(0,1),(0,0)), 'constant') # 1 pixel padding xd
-        mask = np.pad(mask, ((0,1),(0,0)), 'constant') # 1 pixel padding xd
+
+        img = np.pad(img, ((0,0),(0,1),(0,0)), 'constant') # 1 pixel padding xd                                                                                                                               
+        mask = np.pad(mask, ((0,1),(0,0)), 'constant') # 1 pixel padding xd                                                                                                                                   
 
         if self.transform != None:
-            img, mask = self.transform((img, mask))
+            img_aug, mask_aug = self.transform((img, mask))
 
-        return {
-            'image': torch.as_tensor(img.copy()).float().contiguous(),
-            'mask': torch.as_tensor(mask.copy()).long().contiguous(),
-            'filename': str(mask_file[0]).split("/")[-1]
-        }
 
+        else:
+            return {
+                'image': torch.as_tensor(img.copy()).float().contiguous(),
+                'mask': torch.as_tensor(mask.copy()).long().contiguous(),
+                'filename': str(mask_file[0]).split("/")[-1]
+            }
+
+        if img.flatten().tolist() == img_aug.flatten().tolist():
+            return {
+                'image': torch.as_tensor(img.copy()).float().contiguous(),
+                'mask': torch.as_tensor(mask.copy()).long().contiguous(),
+                'image_aug': torch.zeros(torch.as_tensor(img.copy()).float().contiguous().shape).long(),
+                'mask_aug': torch.zeros(torch.as_tensor(mask.copy()).long().contiguous().shape).long(),
+                'filename': str(mask_file[0]).split("/")[-1]
+            }
+        else:
+            return {
+                'image': torch.as_tensor(img.copy()).float().contiguous(),
+                'image_aug': torch.as_tensor(img_aug.copy()).float().contiguous(),
+                'mask': torch.as_tensor(mask.copy()).long().contiguous(),
+                'mask_aug': torch.as_tensor(mask_aug.copy()).long().contiguous(),
+                'filename': str(mask_file[0]).split("/")[-1]
+            }
 
 def get_dataloaders(transform, paths, batch_size):
     dir_img = Path(paths[0])
