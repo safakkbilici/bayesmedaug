@@ -290,6 +290,8 @@ class Rotate():
       - Rotates the image.
       - hyperparameters:
         * angle: int
+      - discretization: 
+        * int(ceil(x * 10)) * 10
     """
     def __init__(self, angle):
         self.angle = angle
@@ -386,6 +388,8 @@ class ShiftY():
       - Shifts the image along the Y axis.
       - hyperparameters:
         * shift_amount: int
+      - discretization:
+        * x>=0: 100, x<0: -100
     """
     def __init__(self, shift_amount):
         self.shift_amount = shift_amount
@@ -420,6 +424,8 @@ class ShiftX():
       - Shifts the image along the X axis.
       - hyperparameters:
         * shift_amount: int
+      - discretization:
+        * x>=0: 100, x<0: -100
     """
     def __init__(self, shift_amount):
         self.shift_amount = shift_amount
@@ -488,6 +494,8 @@ class RandomCrop():
       - Crops random area of the image
       - hyperparameters:
         * crop_height: int, crop_width: int
+      - discretization:
+        * x * 1000
     """
     def __init__(self, crop_height, crop_width):
         self.crop_height = crop_height
