@@ -19,7 +19,8 @@ from bayesmedaug.utils.discretize import(
     roundup,
     discrete_angle,
     discrete_angle_normalized,
-    discrete_shift
+    discrete_shift,
+    discrete_rcrop
 )
 
 class Trainer():
@@ -103,6 +104,10 @@ class Trainer():
         if "shift_y" in params.keys():
             params["shift_y"] = discrete_shift(params["shift_y"])
 
+        if "crop_height" in params.keys():
+            params["crop_height"] = discrete_rcrop(params["crop_height"])
+            params["crop_width"] = discrete_rcrop(params["crop_height"])
+
         transform = self.augmentations(**params)
 
         paths_ = []
@@ -123,17 +128,24 @@ class Trainer():
                     model.train()
                     batch_count +=1
                     optimizer.zero_grad()
-                    out = model(batch["image"].to(self.device))
+                    if batch["image_aug"].flatten().sum() != 0:
+                        images = torch.cat([batch["image"], batch["image_aug"]], dim=0)
+                        masks = torch.cat([batch["mask"], batch["mask_aug"]], dim=0)
+                    else:
+                        images = batch["image"]
+                        masks = batch["mask"]
+
+                    out = model(images.to(self.device))
 
                     if self.dice_loss:
-                        loss = criterion(out, batch["mask"].long().to(self.device)) \
+                        loss = criterion(out, masks.long().to(self.device)) \
                             + dice_loss(
                                 F.softmax(out, dim=1).float(),
-                                F.one_hot(batch["mask"].to(self.device), model.n_classes).permute(0, 3, 1, 2).float(),
+                                F.one_hot(masks.to(self.device), model.n_classes).permute(0, 3, 1, 2).float(),
                                 multiclass=True
                             )
                     else:
-                        loss = criterion(out, batch["mask"].long().to(self.device))
+                        loss = criterion(out, masks.long().to(self.device))
                     loss.backward()
                     optimizer.step()
                     train_loss += loss.item()
@@ -152,12 +164,12 @@ class Trainer():
                       best_metric = val_score.item()
                     except:
                       best_metric = float(val_score)
-                
+
                 if self.scheduler != None:
                     scheduler.step()
 
         return best_metric
-        
+
     @torch.no_grad()
     def evaluate(self, net, dataloader, device, disable=True):
         net.eval()
@@ -185,7 +197,8 @@ class Trainer():
                     eval_score += multiclass_dice_coeff(mask_pred[:, 1:, ...], mask_true[:, 1:, ...], reduce_batch_first=False)
                 elif self.return_metric == 'iou':
                     eval_score += IoU(mask_pred, mask_true)
-                elif self.return_metric == 'auc':
+		elif self.return_metric == 'auc':
                     eval_score += AUC(mask_pred, mask_true)
-                
+
         return eval_score / num_val_batches
+
