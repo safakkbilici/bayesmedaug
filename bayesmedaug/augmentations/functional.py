@@ -507,15 +507,18 @@ class RandomCrop():
         img = pairs[0]
         mask = pairs[1]
         
-        h, w = img.shape[-2], img.shape[-1]
+        h, w = img.shape[-1], img.shape[-2]
         h_start = random.random()
         w_start = random.random()
+
+        img_shape = img.shape
+        mask_shape = mask.shape
         
         if self.to_img:
-            try:
+            if img_shape[0] == 1:
                 img = np.squeeze(img, axis = 0)
-            except:
-                pass
+            if mask_shape[0] == 1:
+                mask = np.squeeze(mask, axis = 0)
             if h < self.crop_height or w < self.crop_width:
                 raise ValueError()
 
@@ -526,7 +529,6 @@ class RandomCrop():
         
             img = img[y1:y2, x1:x2]
             img = cv2.resize(img, dsize=(h, w), interpolation=cv2.INTER_CUBIC)
-            img = img[None, :, :]
             
         if self.to_mask:
             try:
@@ -543,6 +545,10 @@ class RandomCrop():
         
             mask = mask[y1:y2, x1:x2]
             mask = cv2.resize(mask, dsize=(h, w), interpolation=cv2.INTER_CUBIC)
+
+        if img_shape[0] == 1:
+            img = img[None, :, :]
+        if mask_shape[0] == 1:
             mask = mask[None, :, :]
             
         return img, mask
