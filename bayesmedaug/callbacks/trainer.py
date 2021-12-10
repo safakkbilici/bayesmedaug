@@ -132,7 +132,7 @@ class Trainer():
                     else:
                         images = batch["image"]
                         masks = batch["mask"]
-
+                        
                     out = model(images.to(self.device))
 
                     if self.dice_loss:
@@ -188,15 +188,16 @@ class Trainer():
                 elif self.return_metric == 'iou':
                     eval_score += IoU(mask_pred, mask_true)
                 elif self.return_metric == 'auc':
-                    eval_score += AUC(mask_pred, mask_true)
+                    eval_score += AUC(mask_pred, mask_true)          
             else:
                 mask_pred = F.one_hot(mask_pred.argmax(dim=1), net.n_classes).permute(0, 3, 1, 2).float()
-                if self.return_metric == 'dice':
+
+                if self.return_metric == 'auc':
+                    eval_score += AUC(mask_pred, mask_true)
+                elif self.return_metric == 'dice':
                     eval_score += multiclass_dice_coeff(mask_pred[:, 1:, ...], mask_true[:, 1:, ...], reduce_batch_first=False)
                 elif self.return_metric == 'iou':
                     eval_score += IoU(mask_pred, mask_true)
-		elif self.return_metric == 'auc':
-                    eval_score += AUC(mask_pred, mask_true)
-
+            
         return eval_score / num_val_batches
 
