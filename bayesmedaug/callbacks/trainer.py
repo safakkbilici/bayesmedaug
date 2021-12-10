@@ -18,7 +18,6 @@ from bayesmedaug.utils.model_utils import (
 from bayesmedaug.utils.discretize import(
     roundup,
     discrete_angle,
-    discrete_angle_normalized,
     discrete_shift,
     discrete_rcrop
 )
@@ -98,7 +97,7 @@ class Trainer():
             scheduler = self.scheduler(optimizer, **self.scheduler_args)
         
         if "angle" in params.keys():
-            params["angle"] = discrete_angle_normalized(params["angle"])
+            params["angle"] = discrete_angle(params["angle"])
         if "shift_x" in params.keys():
             params["shift_x"] = discrete_shift(params["shift_x"])
         if "shift_y" in params.keys():
@@ -106,7 +105,6 @@ class Trainer():
 
         if "crop_height" in params.keys():
             params["crop_height"] = discrete_rcrop(params["crop_height"])
-            params["crop_width"] = discrete_rcrop(params["crop_height"])
 
         transform = self.augmentations(**params)
 
