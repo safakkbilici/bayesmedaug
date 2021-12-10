@@ -318,10 +318,10 @@ class ShearY():
     ShearY:
       - Moves one side of the image along the Y axis.
       - hyperparameters:
-        * shear_amount: int
+        * shear_amount_y: int
     """
-    def __init__(self, shear_amount):
-        self.shear_amount = shear_amount
+    def __init__(self, shear_amount_y):
+        self.shear_amount_y = shear_amount_y
         self.to_mask = True
         self.to_img = True
 
@@ -330,14 +330,14 @@ class ShearY():
         mask = pairs[1]
         if self.to_img:
             seq = iaa.Sequential([
-                iaa.ShearY((self.shear_amount)),
+                iaa.ShearY((self.shear_amount_y)),
             ])
 
             img = seq(images=img)
 
         if self.to_mask:
             seq = iaa.Sequential([
-                iaa.ShearY((self.shear_amount)),
+                iaa.ShearY((self.shear_amount_y)),
             ])
         
             mask = seq(images=mask)
@@ -345,7 +345,7 @@ class ShearY():
 
     @staticmethod
     def hyperparameters():
-        return ["shear_amount"]
+        return ["shear_amount_y"]
 
 
 class ShearX():
@@ -353,10 +353,10 @@ class ShearX():
     ShearX:
       - Moves one side of the image along the X axis.
       - hyperparameters:
-        * shear_amount: int
+        * shear_amount_x: int
     """
-    def __init__(self, shear_amount):
-        self.shear_amount = shear_amount
+    def __init__(self, shear_amount_x):
+        self.shear_amount_x = shear_amount_x
         self.to_mask = True
         self.to_img = True
 
@@ -365,14 +365,14 @@ class ShearX():
         mask = pairs[1]
         if self.to_img:
             seq = iaa.Sequential([
-                iaa.ShearX((self.shear_amount)),
+                iaa.ShearX((self.shear_amount_x)),
             ])
 
             img = seq(images=img)
 
         if self.to_mask:
             seq = iaa.Sequential([
-                iaa.ShearX((self.shear_amount)),
+                iaa.ShearX((self.shear_amount_x)),
             ])
         
             mask = seq(images=mask)
@@ -380,19 +380,19 @@ class ShearX():
 
     @staticmethod
     def hyperparameters():
-        return ["shear_amount"]
+        return ["shear_amount_x"]
 
 class ShiftY():
     """
     ShiftY:
       - Shifts the image along the Y axis.
       - hyperparameters:
-        * shift_amount: int
+        * shift_amount_y: int
       - discretization:
         * x>=0: 100, x<0: -100
     """
-    def __init__(self, shift_amount):
-        self.shift_amount = shift_amount
+    def __init__(self, shift_amount_y):
+        self.shift_amount_y = shift_amount_y
         self.to_mask = True
         self.to_img = True
 
@@ -401,14 +401,14 @@ class ShiftY():
         mask = pairs[1]
         if self.to_img:
             seq = iaa.Sequential([
-                iaa.TranslateY(px=(self.shift_amount)),
+                iaa.TranslateY(px=(self.shift_amount_y)),
             ])
 
             img = seq(images=img)
 
         if self.to_mask:
             seq = iaa.Sequential([
-                iaa.TranslateY(px=(self.shift_amount)),
+                iaa.TranslateY(px=(self.shift_amount_y)),
             ])
         
             mask = seq(images=mask)
@@ -416,19 +416,19 @@ class ShiftY():
 
     @staticmethod
     def hyperparameters():
-        return ["shift_amount"]
+        return ["shift_amount_y"]
 
 class ShiftX():
     """
     ShiftX:
       - Shifts the image along the X axis.
       - hyperparameters:
-        * shift_amount: int
+        * shift_amount_x: int
       - discretization:
         * x>=0: 100, x<0: -100
     """
-    def __init__(self, shift_amount):
-        self.shift_amount = shift_amount
+    def __init__(self, shift_amount_x):
+        self.shift_amount_x = shift_amount_x
         self.to_mask = True
         self.to_img = True
 
@@ -437,14 +437,14 @@ class ShiftX():
         mask = pairs[1]
         if self.to_img:
             seq = iaa.Sequential([
-                iaa.TranslateX(px=(self.shift_amount)),
+                iaa.TranslateX(px=(self.shift_amount_x)),
             ])
 
             img = seq(images=img)
 
         if self.to_mask:
             seq = iaa.Sequential([
-                iaa.TranslateX(px=(self.shift_amount)),
+                iaa.TranslateX(px=(self.shift_amount_x)),
             ])
         
             mask = seq(images=mask)
@@ -452,7 +452,7 @@ class ShiftX():
 
     @staticmethod
     def hyperparameters():
-        return ["shift_amount"]
+        return ["shift_amount_x"]
     
     
 class ZoomOut():
@@ -556,11 +556,11 @@ class Emboss():
     Emboss:
     - Embosses the input image and overlays with the input image.
     - hyperparameters:
-        * alpha (float): range to choose the visibility of the embossed image.
+        * alpha_emboss (float): range to choose the visibility of the embossed image.
         * strength (float): strength range of the embossing.
     """
-    def __init__(self, alpha=0.2, strength=1.0):
-        self.alpha = alpha
+    def __init__(self, alpha_emboss=0.2, strength=1.0):
+        self.alpha_emboss = alpha
         self.strength = strength
         self.to_img = True
         self.to_mask = False
@@ -571,7 +571,7 @@ class Emboss():
         
         if self.to_img:
             seq = iaa.Sequential([
-                iaa.convolutional.Emboss(self.alpha, self.strength)
+                iaa.convolutional.Emboss(self.alpha_emboss, self.strength)
                 ])
         
             img = seq(images=img)
@@ -583,7 +583,7 @@ class Emboss():
     
     @staticmethod
     def hyperparameters():
-        return ["alpha", "strength"]
+        return ["alpha_emboss", "strength"]
     
    
 class Sharpen():
@@ -591,11 +591,11 @@ class Sharpen():
     Sharpen:
     - Sharpen the input image and overlays the result with the original image.
     - hyperparameters:
-        * alpha (float): range to choose the visibility of the embossed image.
+        * alpha_sharpen (float): range to choose the visibility of the embossed image.
         * lightness (float): range to choose the lightness of the sharpened image.
     """
-    def __init__(self, alpha=0.2, lightness=1.0):
-        self.alpha = alpha
+    def __init__(self, alpha_sharpen=0.2, lightness=1.0):
+        self.alpha_sharpen = alpha
         self.lightness = lightness
         self.to_img = True
         self.to_mask = False
@@ -606,7 +606,7 @@ class Sharpen():
         
         if self.to_img:
             seq = iaa.Sequential([
-                iaa.convolutional.Sharpen(self.alpha, self.lightness)
+                iaa.convolutional.Sharpen(self.alpha_sharpen, self.lightness)
                 ])
         
             img = seq(images=img)
@@ -618,4 +618,4 @@ class Sharpen():
     
     @staticmethod
     def hyperparameters():
-        return ["alpha", "lightness"]
+        return ["alpha_sharpen", "lightness"]
