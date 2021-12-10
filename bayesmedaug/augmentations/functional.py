@@ -497,9 +497,9 @@ class RandomCrop():
       - discretization:
         * x * 1000
     """
-    def __init__(self, crop_height, crop_width):
+    def __init__(self, crop_height):
         self.crop_height = crop_height
-        self.crop_width = crop_width
+        self.crop_width = crop_height
         self.to_mask = True
         self.to_img = True
         
@@ -549,7 +549,7 @@ class RandomCrop():
 
     @staticmethod
     def hyperparameters():
-        return ["crop_height", "crop_width"]
+        return ["crop_height"]
     
 class Emboss():
     """
