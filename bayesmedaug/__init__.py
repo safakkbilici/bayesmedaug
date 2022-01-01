@@ -1,6 +1,7 @@
 from bayesmedaug.models.unet import VanillaUNet
 from bayesmedaug.callbacks.trainer import Trainer
 from bayesmedaug.augmentations.alist import Listed
+from bayesmedaug.augmentations.binary import BinaryListed
 from bayesmedaug.callbacks.bo import BOMed
 from bayesmedaug.augmentations.functional import *
 
