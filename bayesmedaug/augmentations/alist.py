@@ -6,7 +6,7 @@ import warnings
 
 #TODO:
 # - optimize selection probability of each augmentation method
-#   then match hyperparameters and methods automatically
+#   then match hyperparameters and methods automatically: Done
 
 class Listed():
     def __init__(
