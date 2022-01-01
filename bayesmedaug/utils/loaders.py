@@ -201,8 +201,8 @@ def get_binary_dataloaders(paths, batch_size):
     test_dir_img = Path(paths[2])
     test_dir_mask = Path(paths[3])
 
-    dataset = SegmentationDataset(dir_img, dir_mask, 1.)
-    test_dataset = SegmentationDataset(test_dir_img, test_dir_mask, 1.)
+    dataset = BinaryDataset(dir_img, dir_mask, 1.)
+    test_dataset = BinaryDataset(test_dir_img, test_dir_mask, 1.)
     
     train_dataloader = DataLoader(dataset, shuffle=True, batch_size = batch_size)
     test_dataloader = DataLoader(test_dataset, shuffle=False, batch_size = batch_size)
