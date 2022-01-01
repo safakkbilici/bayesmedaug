@@ -4,12 +4,6 @@ bayesmedaug optimizes your data augmentation hyperparameters for medical image s
 
 bayesmedaug is currently in beta release and still in development.
 
-## Authors
-- M. Şafak Bilici
-- Onur Boyar
-- Enes Sadi Uysal
-- Alara Hergün
-
 ## Optimizing Magnitudes
 
 ```python
@@ -170,3 +164,10 @@ optimizer.maximize(
     n_iter = 15,
 )
 ```
+
+
+## Authors
+- [M. Şafak Bilici](https://github.com/safakkbilici)
+- [Onur Boyar](https://github.com/onurboyar)
+- [Enes Sadi Uysal](https://github.com/eneSadi)
+- [Alara Hergün](https://github.com/alarahergun)
