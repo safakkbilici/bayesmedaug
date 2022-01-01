@@ -27,7 +27,7 @@ params = {
     'zoom_amount': (0.5,0.9),
     'gamma': (0.5,1.5),
     'crop_height': (0.1, 0.4),
-    'alpha': (0.1, 1),
+    'alpha_sharpen': (0.1, 1),
     'lightness': (0.1, 1.5),
 
 }
