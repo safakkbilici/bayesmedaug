@@ -2,11 +2,17 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import os
-from typing import Optional
+from typing import Optional, Union
 from tqdm.auto import tqdm
 
 from bayesmedaug.augmentations.alist import Listed
-from bayesmedaug.utils.loaders import get_dataloaders
+from bayesmedaug.augmentations.binary import BinaryListed
+from bayesmedaug.utils.loaders import (
+    get_dataloaders,
+    get_binary_dataloaders
+)
+
+
 from bayesmedaug.utils.model_utils import (
     dice_coeff,
     dice_loss,
@@ -33,14 +39,14 @@ class Trainer():
             epochs: int,
             train_dir: str,
             eval_dir: str,
-            augmentations: Listed,
+            augmentations: Union[Listed, BinaryListed],
             scheduler: Optional = None,
             scheduler_args: Optional[dict]  = None,
             batch_size: int = 5,
             return_best: bool = True,
             dice_loss: bool = True,
             return_metric : str = 'dice'
-    ):
+    ) -> None:
         r"""
         Args:
             model: implemented unet models that to be used, i.e., bayesmedaug.VanillaUNet
@@ -106,7 +112,10 @@ class Trainer():
         if "crop_height" in params.keys():
             params["crop_height"] = discrete_rcrop(params["crop_height"])
 
-        transform = self.augmentations(**params)
+        if type(self.augmentations) == Listed:
+            transform = self.augmentations(**params)
+        elif type(self.augmentations) == BinaryListed:
+            self.augmentations(**params)
 
         paths_ = []
         paths_.append(os.path.join(self.train_dir, "images"))
@@ -114,7 +123,11 @@ class Trainer():
         paths_.append(os.path.join(self.eval_dir, "images"))
         paths_.append(os.path.join(self.eval_dir, "labels"))
 
-        train_dataloader, test_dataloader = get_dataloaders(transform, paths_, self.batch_size)
+        if type(self.augmentations) == Listed:
+            train_dataloader, test_dataloader = get_dataloaders(transform, paths_, self.batch_size)
+        elif type(self.augmentations) == BinaryListed:
+            train_dataloader, test_dataloader = get_binary_dataloaders(paths_, self.batch_size)
+            
         total = len(train_dataloader) * self.epochs
         
         best_metric = 0
@@ -126,7 +139,7 @@ class Trainer():
                     model.train()
                     batch_count +=1
                     optimizer.zero_grad()
-                    if batch["image_aug"].flatten().sum() != 0:
+                    if "image_aug" in batch.keys() and batch["image_aug"].flatten().sum() != 0:
                         images = torch.cat([batch["image"], batch["image_aug"]], dim=0)
                         masks = torch.cat([batch["mask"], batch["mask_aug"]], dim=0)
                     else:
