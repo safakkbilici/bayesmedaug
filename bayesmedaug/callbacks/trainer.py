@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import os
-from typing import Optional, Union
+from typing import Optional, Union, List
 from tqdm.auto import tqdm
 
 from bayesmedaug.augmentations.alist import Listed
@@ -45,7 +45,8 @@ class Trainer():
             batch_size: int = 5,
             return_best: bool = True,
             dice_loss: bool = True,
-            return_metric : str = 'dice'
+            return_metric : str = 'dice',
+            show_metrics: Optional[List[str]] = None
     ) -> None:
         r"""
         Args:
@@ -94,6 +95,8 @@ class Trainer():
         self.batch_size = batch_size
         self.epochs = epochs
         self.return_metric = return_metric
+        self.print_metrics = print_metrics
+        self.implemented_metrics = ["iou", "auc", "dice"]
 
     def train(self, **params):
         model = self.model(**self.model_args).to(self.device)
@@ -179,6 +182,9 @@ class Trainer():
                 if self.scheduler != None:
                     scheduler.step()
 
+        if self.print_metrics != None:
+            pm = self.pmetric(model, test_dataloader, self.device, True)
+            print(pm)
         return best_metric
 
     @torch.no_grad()
@@ -214,3 +220,36 @@ class Trainer():
             
         return eval_score / num_val_batches
 
+    @torch.no_grad()
+    def pmetric(self, net, dataloader, device, disable = True, round_ = 3):
+        metrics = {k: 0 for k in self.print_metrics}
+        net.eval()
+        num_val_batches = len(dataloader)
+        auc, dice, iou = 0, 0, 0
+        for batch in tqdm(dataloader, total=num_val_batches, desc='Validation Round', unit='batch', leave=False, position=0, disable=disable):
+            image, mask_true = batch['image'], batch['mask']
+            image = image.to(device=device, dtype=torch.float32)
+            mask_true = mask_true.to(device=device, dtype=torch.long)
+            mask_true = F.one_hot(mask_true, net.n_classes).permute(0, 3, 1, 2).float()
+
+            mask_pred = net(image)
+            if net.n_classes == 1:
+                mask_pred = (F.sigmoid(mask_pred) > 0.5).float()
+                if "dice" in self.print_metrics:
+                    metrics["dice"] += dice_coeff(mask_pred, mask_true, reduce_batch_first=False)
+                elif "iou" in self.print_metrics:
+                    metrics["iou"] += IoU(mask_pred, mask_true)
+                elif "auc" in self.print_metrics:
+                    metrics["auc"] += AUC(mask_pred, mask_true)          
+            else:
+                mask_pred = F.one_hot(mask_pred.argmax(dim=1), net.n_classes).permute(0, 3, 1, 2).float()
+
+                if "auc" in self.print_metrics:
+                    metrics["auc"] += AUC(mask_pred, mask_true)
+                elif "dice" in self.print_metrics:
+                    metrics["dice"] += multiclass_dice_coeff(mask_pred[:, 1:, ...], mask_true[:, 1:, ...], reduce_batch_first=False)
+                elif "iou" in self.print_metrics:
+                    metrics["iou"] += IoU(mask_pred, mask_true)
+
+        print_metrics = {k: round(v/num_val_batches, round_) for k, v in metrics.items()}
+        return print_metrics
