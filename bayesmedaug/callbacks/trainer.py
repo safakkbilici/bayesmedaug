@@ -46,7 +46,7 @@ class Trainer():
             return_best: bool = True,
             dice_loss: bool = True,
             return_metric : str = 'dice',
-            show_metrics: Optional[List[str]] = None
+            print_metrics: Optional[List[str]] = None
     ) -> None:
         r"""
         Args:
