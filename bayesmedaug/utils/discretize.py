@@ -18,3 +18,6 @@ def discrete_shift(x):
 
 def discrete_rcrop(x):
     return int(x * 1000)
+
+def discrete_shear(x):
+    return x * 10

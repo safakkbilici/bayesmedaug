@@ -25,7 +25,8 @@ from bayesmedaug.utils.discretize import(
     roundup,
     discrete_angle,
     discrete_shift,
-    discrete_rcrop
+    discrete_rcrop,
+    discrete_shear
 )
 
 class Trainer():
@@ -107,13 +108,17 @@ class Trainer():
         
         if "angle" in params.keys():
             params["angle"] = discrete_angle(params["angle"])
-        if "shift_x" in params.keys():
-            params["shift_x"] = discrete_shift(params["shift_x"])
-        if "shift_y" in params.keys():
-            params["shift_y"] = discrete_shift(params["shift_y"])
-
+        if "shift_amount_x" in params.keys():
+            params["shift_amount_x"] = discrete_shift(params["shift_amount_x"])
+        if "shift_amount_y" in params.keys():
+            params["shift_amount_y"] = discrete_shift(params["shift_amount_y"])
         if "crop_height" in params.keys():
             params["crop_height"] = discrete_rcrop(params["crop_height"])
+        if "shear_amount_y" in params.keys():
+            params["shear_amount_y"] = discrete_shear(params["shear_amount_y"])
+        if "shear_amount_x" in params.keys():
+            params["shear_amount_x"] = discrete_shear(params["shear_amount_x"])
+
 
         if type(self.augmentations) == Listed:
             transform = self.augmentations(**params)
