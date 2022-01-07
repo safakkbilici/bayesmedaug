@@ -392,7 +392,7 @@ class ShiftY():
         * x>=0: 100, x<0: -100
     """
     def __init__(self, shift_amount_y):
-        self.shift_amount_y = shift_amount_y
+        self.shift_amount_y = int(shift_amount_y)
         self.to_mask = True
         self.to_img = True
 
@@ -428,7 +428,7 @@ class ShiftX():
         * x>=0: 100, x<0: -100
     """
     def __init__(self, shift_amount_x):
-        self.shift_amount_x = shift_amount_x
+        self.shift_amount_x = int(shift_amount_x)
         self.to_mask = True
         self.to_img = True
 
